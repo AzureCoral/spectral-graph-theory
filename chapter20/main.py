@@ -74,43 +74,6 @@ def create_partition_graph(
 
 
 
-class Isoperimetry(Scene):
-    def construct(self):
-        g, vertex_labels, edge_labels, S_region, S_label = create_partition_graph(
-            num_edges=14, graph_size=10, partition_ratio=3)
-        self.play(Write(g), Write(S_region), Write(S_label), run_time=2)
-        self.wait(2)
-
-        vgroup = VGroup(g, S_region, S_label)
-
-        self.play(vgroup.animate.scale(0.8).to_edge(LEFT, buff=1.5))
-
-        subset_vertices = list(range(1, 10 // 3 + 1))  # Adjust according to your partition_ratio
-
-        boundary_edges_cardinality = sum(
-            1 for edge in g.edges if (edge[0] in subset_vertices) != (edge[1] in subset_vertices)
-        )
-
-        S_cardinality = len(subset_vertices)
-
-        text = MathTex(r"\theta(S) =", r"\frac{|\text{boundary edges}|}{|\text{S}|}", font_size=40)
-        text_next = MathTex(r"\theta(S) =", r"\frac{|\partial(S)|}{|\text{S}|}")
-        text2 = MathTex(r" = \frac{" + str(boundary_edges_cardinality) + r"}{" + str(S_cardinality) + r"} = " + str(round(boundary_edges_cardinality / S_cardinality, 2)), font_size=40)
-
-        text.next_to(vgroup, RIGHT, buff=1.5)
-        text_next.move_to(text.get_center())
-        self.play(Write(text))
-        self.wait(3)
-        self.play(Transform(text, text_next))
-        self.wait(2)
-        self.play(text.animate.shift(LEFT * 1.5))
-        self.wait(1)
-        text2.next_to(text, RIGHT, buff=0.5)
-        self.play(Write(text2))
-        self.wait(3)
-
-        self.play(FadeOut(g), FadeOut(text), FadeOut(text2), FadeOut(vgroup))
-
 class IsoperimetryExample(Scene):
     def construct(self):
         eq1 = MathTex(r"\theta_{G} = \underset{|\text{S}| \leq \frac{n}{2}}{\min} \theta(S)")
@@ -155,8 +118,11 @@ class IsoperimetryExample(Scene):
             g, _, _, S_region, S_label = create_partition_graph(
                 vertices=vertices, edges=edges, num_edges=14, graph_size=10, partition_ratio=p, subset_vertices=subset_vertices[i], S_angle=angles[i], label_pos=label_pos[i])
 
-            vgroup = VGroup(g, S_region, S_label).to_edge(LEFT, buff=1.5)
-            vgroup2 = VGroup(g, S_region).to_edge(LEFT, buff=1.5)
+            vgroup = VGroup(g, S_region, S_label)
+            vgroup2 = VGroup(g, S_region)
+
+            vgroup.to_edge(LEFT, buff=1.5).to_edge(DOWN, buff=2)
+            vgroup2.to_edge(LEFT, buff=1.5).to_edge(DOWN, buff=2)
             self.play(Write(vgroup), run_time=1.5)
 
             boundary_edges_cardinality = sum(
@@ -164,7 +130,7 @@ class IsoperimetryExample(Scene):
             )
 
             eq2 = MathTex(r"\theta(S) = " + str(round(boundary_edges_cardinality / len(subset_vertices[i]), 2)), font_size=40)
-            eq2.next_to(vgroup, RIGHT, buff=1.5)
+            eq2.shift(RIGHT * 3)
 
             self.play(Write(eq2))
             self.wait(2)
@@ -172,14 +138,16 @@ class IsoperimetryExample(Scene):
             new_group2 = VGroup(vgroup, eq2)
             self.play(new_group2.animate.shift(RIGHT * 18), run_time=2)
 
-            eq2.next_to(vgroup2, RIGHT, buff=0.75).scale(1.5)
+            # eq2.next_to(vgroup2, RIGHT, buff=0.75).scale(1.5)
             new_group = VGroup(vgroup2, eq2)
             all_groups.append(new_group)
 
 
         for i, group in enumerate(all_groups):
             group.scale(0.5)
-            group[1].align_to(group[0], LEFT).to_edge(DOWN, 2.0)
+            group[0].to_edge(DOWN, buff=2)
+            group[1].next_to(group[0], DOWN)
+            group[1].to_edge(DOWN, buff=1.5)
 
         vmobjec = VGroup(*all_groups).arrange(RIGHT, buff=0.5)  # Arrange as needed
 
@@ -188,7 +156,8 @@ class IsoperimetryExample(Scene):
         sorted_indices = [0, 2, 4, 3, 1]
 
         self.wait(2)
-        self.play(Transform(vmobjec, VGroup(*[vmobjec[i] for i in sorted_indices]).arrange(RIGHT, buff=0.5)))
+        sorted_vmobject = VGroup(*[vmobjec[i].copy() for i in sorted_indices]).arrange(RIGHT, buff=0.5)
+        self.play(*[graph.animate.next_to(sorted_vmobject[sorted_indices.index(i)], 0) for i, graph in enumerate(vmobjec)], run_time=2)
         self.wait(2)
         self.play(FadeOut(vmobjec), run_time=1)
 
