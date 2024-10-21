@@ -1,4 +1,7 @@
 media
+audio
+*.mp3
+Media Files
 .DS_Store
 __pycache__
 .vscode
