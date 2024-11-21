@@ -1,6 +1,6 @@
 # spectral-graph-theory
 ## Spectral and Algebraic Graph Theory (Daniel A Spielman)
-This repository contains the code for the animations in the video ["CSCI2952Q: Spectral and Algebraic Graph Theory"](https://youtu.be/DQVuFo6CSmE). The video is based on the book "Spectral and Algebraic Graph Theory" by Daniel A Spielman. The video was created as a paper presentation for the course CSCI2952Q at Brown University.
+This repository contains the code for the animations in the video ["CSCI2952Q: Spectral and Algebraic Graph Theory"](https://youtu.be/DQVuFo6CSmE). The video is based on the book ["Spectral and Algebraic Graph Theory"](http://cs-www.cs.yale.edu/homes/spielman/sagt/sagt.pdf) by Daniel A Spielman. The video was created as a paper presentation for the course [CSCI2952Q](https://cs.brown.edu/people/ycheng79/csci2952qf24.html) at Brown University.
 
 ```
 /chapter2
